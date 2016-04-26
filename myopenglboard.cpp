@@ -11,13 +11,27 @@ void myOpenglBoard::mousePressEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton)
     {
+        //Tower = new plain_Tower(&m_program,vertexAttr,textureAttr,textureUniform);
 
-        GLfloat tmp_x = GLfloat(GLfloat((this->mapFromGlobal(event->pos()).x()))/GLfloat(this->width()));
-        GLfloat tmp_y = GLfloat(GLfloat((this->mapFromGlobal(event->pos()).y()))/GLfloat(this->height()));
-        Tower->SetX(tmp_x);
-        Tower->SetY(tmp_y);
-        Tower->initVertices();
-        qDebug()<<GLfloat((this->mapFromGlobal(event->pos()).x()))<<"  "<<GLfloat((this->mapFromGlobal(event->pos()).y()));
+
+        GLfloat tmp_x = GLfloat((this->mapFromParent(event->pos()).x()));
+        GLfloat tmp_y =   GLfloat((this->mapFromParent(event->pos()).y()));
+
+        //Tower->SetX((tmp_x)-512);
+        //Tower->SetY(-(tmp_y)+334);
+
+
+        Tower->SetX(0);
+        Tower->SetY(0);
+
+        //Tower->initVertices();
+      //  Tower->initTextures();
+        //tower_vctr.push_back(*Tower);
+        //Tower->draw();
+
+        //delete Tower;
+       qDebug()<<(tmp_x)-512<<"  "<<-(tmp_y)+334;
+
 
 
 
@@ -43,15 +57,22 @@ myOpenglBoard::myOpenglBoard()
 
 myOpenglBoard::~myOpenglBoard()
 {
+
+    for(int i  = 0 ; i<1024 ; i++)
+    {
+        delete[] TruthTable[i];
+    }
+    delete[] TruthTable;
+    makeCurrent();
     delete Tower;
+    doneCurrent();
 }
 void myOpenglBoard::initializeGL()
 {
     initializeOpenGLFunctions();
-    qglClearColor(Qt::red);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_LIGHTING);
+   // initTruthTable();
+     qglClearColor(Qt::red);
+
     QOpenGLShader vShader(QOpenGLShader::Vertex);
     vShader.compileSourceFile(":/Shaders/vShader.glsl");
     QOpenGLShader fShader(QOpenGLShader::Fragment);
@@ -66,31 +87,43 @@ void myOpenglBoard::initializeGL()
 
     }
     vertexAttr = m_program.attributeLocation("vertexAttr");
-    colorAttr = m_program.attributeLocation("colorAttr");
+    textureAttr = m_program.attributeLocation("textureAttr");
+    textureUniform = m_program.uniformLocation("textureUniform");
     matrixUniform = m_program.uniformLocation("matrix");
 
-    Tower = new plain_Tower(&m_program,vertexAttr,colorAttr);
+    Tower = new plain_Tower(&m_program,vertexAttr,textureAttr,textureUniform);
+
+
 
 
 
 
 }
 void myOpenglBoard::paintGL(){
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    glClear(GL_COLOR_BUFFER_BIT );
+
     if(!m_program.bind())
     {
         qWarning("Error while binding");
         return;
     }
+
+
 QMatrix4x4 mtrx;
-
-mtrx.ortho(-1.0f,1.0f,-1.0f,1.0f,1.0f,-1.0f);
-
-mtrx.translate( 0.0f, 0.0f, -1.0f );
-
+//mtrx.ortho(-512.0f,512.0f,-384.0f,384.0f,1.0f,-1.0f);
+mtrx.ortho(-0.5f,0.5f,-0.5f,0.5f,1.0f,-1.0f);
 m_program.setUniformValue(matrixUniform,mtrx);
+
+
+/*if(tower_vctr.size()>0)
+{
+ for(unsigned int i = 0;i<tower_vctr.size();i++)
+ {
+   tower_vctr[i].draw();
+
+ }
+
+}*/
 Tower->draw();
 m_program.release();
 
@@ -104,4 +137,29 @@ void myOpenglBoard::resizeGL(int w, int h){
 
     glViewport(0,0,w,h);
 }
+
+void myOpenglBoard::initTruthTable()
+{
+
+TruthTable = new bool*[1024];
+for (int i = 0; i <1024 ; i++ )
+{
+    TruthTable[i] = new bool[768];
+
+}
+
+for (int i = 0 ; i <1024 ; i++)
+{
+   for (int j = 0 ; j <768 ; j++)
+    {
+
+       TruthTable[i][j] = false;
+
+   }
+}
+
+}
+
+
+
 

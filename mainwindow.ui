@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1094</width>
-    <height>728</height>
+    <width>1100</width>
+    <height>839</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,8 +15,21 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="myOpenglBoard" name="Board_widget" native="true"/>
+    <item row="1" column="0">
+     <widget class="myOpenglBoard" name="Board_widget" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>1024</width>
+        <height>768</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>1024</width>
+        <height>768</height>
+       </size>
+      </property>
+     </widget>
     </item>
     <item row="2" column="0">
      <widget class="QPushButton" name="pushButton_2">
@@ -32,7 +45,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1094</width>
+     <width>1100</width>
      <height>21</height>
     </rect>
    </property>

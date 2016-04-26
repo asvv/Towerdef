@@ -15,16 +15,19 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     myopenglboard.cpp \
-    plain_tower.cpp
+    plain_tower.cpp \
+    background.cpp
 
 HEADERS  += mainwindow.h \
     myopenglboard.h \
-    plain_tower.h
+    plain_tower.h \
+    background.h
 
 FORMS    += mainwindow.ui
 LIBS += -lopengl32
 
 RESOURCES += \
-    shaders.qrc
+    shaders.qrc \
+    textures.qrc
 
 DISTFILES +=

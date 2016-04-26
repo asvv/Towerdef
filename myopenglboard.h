@@ -13,14 +13,17 @@ public:
    explicit myOpenglBoard(QWidget *parent = 0);
    void mousePressEvent(QMouseEvent*);
 private:
+    std::vector<plain_Tower> tower_vctr;
     void initializeGL();
     void paintGL();
     void resizeGL(int, int);
     plain_Tower *Tower;
     QOpenGLShaderProgram m_program;
-
+    void initTruthTable();
+    bool** TruthTable;
     int vertexAttr;
-    int colorAttr;
+    int textureAttr;
+    int textureUniform;
     int matrixUniform;
 
 };

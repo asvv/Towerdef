@@ -1,16 +1,43 @@
 #include "plain_tower.h"
 
-plain_Tower::plain_Tower(QOpenGLShaderProgram* p,int va,int ca)
+plain_Tower::plain_Tower(const plain_Tower &other)
+    :
+      program(other.program),
+      m_texture(other.m_texture),
+      TextureAttr(other.TextureAttr),
+      TextureUniform(other.TextureUniform),
+      VertexAttr(other.VertexAttr),
+      m_X(other.m_X),
+      m_Y(other.m_Y),
+      m_Size(other.m_Size)
+{
+
+    initVertices();
+    initTextures();
+
+}
+
+plain_Tower::~plain_Tower()
+{
+
+    delete m_texture;
+}
+
+plain_Tower::plain_Tower(QOpenGLShaderProgram* p, int va, int ta, int tu)
     :
     program(p),
     VertexAttr(va),
-    ColorAttr(ca),
+    TextureAttr(ta),
+    TextureUniform(tu),
     m_X(0.0f),
     m_Y(0.0f),
-    m_Size(0.10f)
+    m_Size(1.0f)
 {
+
 initVertices();
-initColors();
+initTextures();
+m_texture = new QOpenGLTexture( QImage( ":/Texture/rectx.png" ) );
+qDebug()<<m_texture->height();
 }
 
 
@@ -61,33 +88,34 @@ void plain_Tower::initVertices()
     vertices[17] = 0.0f;
 }
 
-void plain_Tower::initColors()
+void plain_Tower::initTextures()
 {
-    colors.resize(18);
+    texture_coords.resize(12);
 
-    colors[0] = 0.0f;
-    colors[1] = 1.0f;
-    colors[2] = 0.0f;
+    // 0
+    texture_coords[0] = 0.0f;
+    texture_coords[1] = 0.0f;
 
-    colors[3] = 0.0f;
-    colors[4] = 1.0f;
-    colors[5] = 0.0f;
+    // 1
+    texture_coords[2] = 1.0f;
+   texture_coords[3] = 0.0f;
 
-    colors[6] = 0.0f;
-    colors[7] = 1.0f;
-    colors[8] = 0.0f;
+    // 2
+    texture_coords[4] = 0.0f;
+    texture_coords[5] = 1.0f;
 
-    colors[9] = 0.0f;
-    colors[10] = 1.0f;
-    colors[11] = 0.0f;
+    // 3
+    texture_coords[6] = 0.0f;
+    texture_coords[7] = 1.0f;
 
-    colors[12] = 0.0f;
-    colors[13] = 1.0f;
-    colors[14] = 0.0f;
+    // 4
+    texture_coords[8] = 1.0f;
+    texture_coords[9] = 0.0f;
 
-    colors[15] = 0.0f;
-    colors[16] = 1.0f;
-    colors[17] = 0.0f;
+    // 5
+   texture_coords[10] = 1.0f;
+    texture_coords[11] = 1.0f;
+
 
 
 
@@ -95,16 +123,19 @@ void plain_Tower::initColors()
 
 void plain_Tower::draw()
 {
+    m_texture->bind();
+
     program->setAttributeArray(VertexAttr,vertices.data(),3);
-    program->setAttributeArray(ColorAttr,colors.data(),3);
+    program->setAttributeArray(TextureAttr,texture_coords.data(),2);
+    program->setUniformValue(TextureUniform,0);
 
     program->enableAttributeArray(VertexAttr);
-    program->enableAttributeArray(ColorAttr);
+    program->enableAttributeArray(TextureAttr);
 
     glDrawArrays(GL_TRIANGLES,0,6);
 
     program->disableAttributeArray(VertexAttr);
-    program->disableAttributeArray(ColorAttr);
+    program->disableAttributeArray(TextureAttr);
 
 }
 
@@ -128,6 +159,12 @@ GLfloat plain_Tower::GetX()
 GLfloat plain_Tower::GetY()
 {
     return m_Y;
+
+}
+
+GLfloat plain_Tower::GetSize()
+{
+    return m_Size;
 
 }
 
