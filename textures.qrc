@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>Texture/rectx.png</file>
         <file>Texture/rectx.jpg</file>
+        <file>Texture/bcg.png</file>
     </qresource>
 </RCC>

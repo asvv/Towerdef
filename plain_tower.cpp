@@ -14,7 +14,7 @@ plain_Tower::plain_Tower(const plain_Tower &other)
 
     initVertices();
     initTextures();
-
+    m_texture = new QOpenGLTexture( QImage( "C:/Users/Duras/Desktop/Tower Defence/Texture/rectx.png","PNG" ).mirrored() );
 }
 
 plain_Tower::~plain_Tower()
@@ -31,13 +31,13 @@ plain_Tower::plain_Tower(QOpenGLShaderProgram* p, int va, int ta, int tu)
     TextureUniform(tu),
     m_X(0.0f),
     m_Y(0.0f),
-    m_Size(1.0f)
+    m_Size(64.0f)
 {
 
 initVertices();
 initTextures();
-m_texture = new QOpenGLTexture( QImage( ":/Texture/rectx.png" ) );
-qDebug()<<m_texture->height();
+m_texture = new QOpenGLTexture( QImage( "C:/Users/Duras/Desktop/Tower Defence/Texture/rectx.png","PNG" ) );
+
 }
 
 
@@ -142,13 +142,16 @@ void plain_Tower::draw()
 void plain_Tower::SetX(GLfloat x)
 {
     m_X =x;
+    initVertices();
 
 }
 
 void plain_Tower::SetY(GLfloat y)
 {
-    m_Y = y;
 
+    m_Y = 768-y;
+    //m_Y = y;
+    initVertices();
 }
 
 GLfloat plain_Tower::GetX()
