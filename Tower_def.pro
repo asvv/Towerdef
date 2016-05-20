@@ -16,12 +16,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     myopenglboard.cpp \
     plain_tower.cpp \
-    background.cpp
+    background.cpp \
+    plain_enemy.cpp
 
 HEADERS  += mainwindow.h \
     myopenglboard.h \
     plain_tower.h \
-    background.h
+    background.h \
+    plain_enemy.h
 
 FORMS    += mainwindow.ui
 LIBS += -lopengl32

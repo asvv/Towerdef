@@ -1,14 +1,14 @@
-#ifndef BACKGROUND_H
-#define BACKGROUND_H
-#include <plain_tower.h>
+#ifndef PLAIN_ENEMY_H
+#define PLAIN_ENEMY_H
 
-
-class background
+#include "plain_tower.h"
+class plain_enemy
 {
 public:
-    background();
-    ~background();
-    background(QOpenGLShaderProgram* p, int va, int ta, int tu);
+    plain_enemy(const plain_enemy&);
+    ~plain_enemy();
+    plain_enemy();
+    plain_enemy(QOpenGLShaderProgram* p, int va, int ta, int tu);
     void BuildTower();
     void initVertices();
     void initTextures();
@@ -18,17 +18,7 @@ public:
     GLfloat GetX();
     GLfloat GetY();
     GLfloat GetSize();
-    QImage& GetImage();
-    void initPixBoard(QColor **_Board);
-
 private:
-    QImage b;
-
-
-    QImage PixMap;
-
-
-
     QOpenGLTexture* m_texture;
     GLfloat m_X;
     GLfloat m_Y;
@@ -41,4 +31,4 @@ private:
     std::vector<float> texture_coords;
 };
 
-#endif // BACKGROUND_H
+#endif // PLAIN_ENEMY_H

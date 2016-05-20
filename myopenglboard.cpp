@@ -2,9 +2,14 @@
 
 
 myOpenglBoard::myOpenglBoard(QWidget *parent)
-    : QGLWidget(parent)
+    : QGLWidget(parent),
+      TowerSlot(63,72,204),
+      Road(0,0,0)
 {
     this->setFixedSize(1024,768);
+      connect(&Timer,SIGNAL(timeout()),this,SLOT(SlotMove()));
+    Timer.start(1);
+
 
 }
 
@@ -14,11 +19,6 @@ void myOpenglBoard::mousePressEvent(QMouseEvent *event)
     {
         Tower = new plain_Tower(&m_program,vertexAttr,textureAttr,textureUniform);
 
-
-        /*GLfloat tmp_x = GLfloat((this->mapFromParent(event->pos()).x()));
-        GLfloat tmp_y =   GLfloat((this->mapFromParent(event->pos()).y()));
-        tmp_x =  tmp_x - 512;
-        tmp_y = -tmp_y + 324;*/
 
        int a = event->x();
        int b = event->y();
@@ -77,24 +77,46 @@ qDebug()<<tower_vctr.size();
 
 }
 
+void myOpenglBoard::SlotMove()
+{
+
+
+    //Enemy->SetX(Enemy->GetX()+1.0f);
+   // Enemy->SetX(Enemy->GetX()+1.0f);
+    updateGL();
+
+
+}
+
 
 
 bool myOpenglBoard::CheckBoard(int& x, int& y)
 {
 
-
-if (TruthTable[x][y]==false)
+if (ColorMap[x][y]==TowerSlot)
 {
-x = x-(x%64);
-y = (y-(y%64))+64;
+while(ColorMap[x][y]!=Qt::white)
+{
+    x--;
+}
+while(ColorMap[x][y]!=Qt::white)
+{
+    y++;
+}
+
+
+
+ QColor tmp(255,255,255);
+//x = x-(x%64);
+//y = (y-(y%80))+80;
 qDebug() << x <<"  " <<y << "  ";
 
 for(int i = x ; i < x+64 ; i++)
 {
-    for (int j = y-64; j<y;j++)
+    for (int j = y ; j>y-80;j--)
     {
 
-        TruthTable[i][j] = true;
+        ColorMap[i][j] = Qt::black;
     }
 
 
@@ -135,13 +157,14 @@ myOpenglBoard::~myOpenglBoard()
     makeCurrent();
     delete Background;
     doneCurrent();
+    makeCurrent();
+    delete Enemy;
+    doneCurrent();
 }
 void myOpenglBoard::initializeGL()
 {
     initializeOpenGLFunctions();
     initTruthTable();
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
      qglClearColor(Qt::red);
 
     QOpenGLShader vShader(QOpenGLShader::Vertex);
@@ -165,6 +188,11 @@ void myOpenglBoard::initializeGL()
     Background = new background(&m_program,vertexAttr,textureAttr,textureUniform);
     Background->SetX(0.0f);
     Background->SetY(768.0f);
+    Background->initPixBoard(ColorMap);
+
+    Enemy = new plain_enemy(&m_program,vertexAttr,textureAttr,textureUniform);
+    Enemy->SetX(0.0f);
+    Enemy->SetY(768.0f);
 
 
 
@@ -194,10 +222,10 @@ mtrx.ortho(0.0f,1024.0f,0.0f,768.0f,-1.0f,1.0f);
 m_program.setUniformValue(matrixUniform,mtrx);
 
 
-//-512.0f -384.0f
+
 
 Background->draw();
-
+Enemy->draw();
 
 
 if(tower_vctr.size()>0)
@@ -231,7 +259,7 @@ void myOpenglBoard::resizeGL(int w, int h){
 void myOpenglBoard::initTruthTable()
 {
 
-TruthTable = new bool*[1024];
+/*TruthTable = new bool*[1024];
 for (int i = 0; i <1024 ; i++ )
 {
     TruthTable[i] = new bool[768];
@@ -246,7 +274,29 @@ for (int i = 0 ; i <1024 ; i++)
        TruthTable[i][j] = false;
 
    }
-}
+}*/
+
+    ColorMap = new QColor*[1024];
+    for (int i = 0; i <1024 ; i++ )
+    {
+        ColorMap[i] = new QColor[768];
+
+    }
+
+    for (int i = 0 ; i <1024 ; i++)
+    {
+       for (int j = 0 ; j <768 ; j++)
+        {
+
+           //QColor clr(0,0,0);
+           ColorMap[i][j] = Qt::white;
+
+
+       }
+    }
+
+
+
 
 }
 

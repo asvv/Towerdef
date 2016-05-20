@@ -32,12 +32,17 @@ background::background(QOpenGLShaderProgram* p, int va, int ta, int tu)
 {
 initTextures();
 initVertices();
-QImage b,t;
 b.load("C:/Users/Duras/Desktop/Tower Defence/Texture/bcg.png","PNG");
-//t = QGLWidget::convertToGLFormat( b );
+b = b.convertToFormat(QImage::Format_RGB888);
+
 
 m_texture = new QOpenGLTexture( b.mirrored() );
 qDebug()<<m_texture->height()<<" "<<m_texture->width() ;
+QByteArray arr((char*)b.bits(),b.byteCount());
+qDebug()<<b.byteCount();
+
+
+
 }
 
 
@@ -106,33 +111,6 @@ void background::initTextures()
     texture_coords[11] = 768.0f;
 
 
-  /*  texture_coords[0] = m_X;
-     texture_coords[1] = m_Y;
-
-
-     // 1
-     texture_coords[2] = m_X + m_Size;
-     texture_coords[3] = m_Y;
-
-
-     // 2
-    texture_coords[4] = m_X;
-     texture_coords[5] = m_Y +m_Size;
-
-
-     // 3
-     texture_coords[6] =  m_X;
-     texture_coords[7] = m_Y +m_Size;
-
-
-     // 4
-    texture_coords[8] = m_X  +m_Size;
-     texture_coords[9] = m_Y;
-
-
-     // 5
-     texture_coords[10] = m_X+m_Size;
-     texture_coords[11] = m_Y+m_Size;*/
 
 
 
@@ -183,5 +161,37 @@ GLfloat background::GetY()
 GLfloat background::GetSize()
 {
     return m_Size;
+
+}
+
+QImage &background::GetImage()
+{
+    return b;
+
+}
+
+void background::initPixBoard(QColor **_Board)
+{
+    PixMap.load("C:/Users/Duras/Desktop/Tower Defence/Texture/map.png","PNG");
+    PixMap = PixMap.convertToFormat(QImage::Format_RGB888);
+
+
+    for (int i = 0 ; i <1024 ; i++)
+    {
+       for (int j = 0 ; j <768 ; j++)
+        {
+
+           QColor clrCurrent( PixMap.pixel(i,j) );
+           _Board[i][j] = clrCurrent;
+
+
+
+       }
+    }
+
+
+
+
+
 
 }
