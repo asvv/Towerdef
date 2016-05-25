@@ -8,7 +8,7 @@ myOpenglBoard::myOpenglBoard(QWidget *parent)
 {
     this->setFixedSize(1024,768);
       connect(&Timer,SIGNAL(timeout()),this,SLOT(SlotMove()));
-    Timer.start(1);
+    Timer.start(100);
 
 
 }
@@ -42,25 +42,8 @@ void myOpenglBoard::mousePressEvent(QMouseEvent *event)
   if(event->button() == Qt::RightButton)
   {
 
-qDebug()<<tower_vctr.size();
 
 
-  /*for (int i = 0 ; i<1024 ; i++)
-  {
-      for (int j = 0 ; j < 768; j++)
-      {
-
-         if(TruthTable[i][j] == true)
-             qDebug()<<1;
-         else
-             qDebug()<<0;
-
-
-      }
-
-
-
-  }*/
 
 
 
@@ -79,11 +62,34 @@ qDebug()<<tower_vctr.size();
 
 void myOpenglBoard::SlotMove()
 {
+ std::vector<QPoint> tmp = Background->PointList;
+ auto Form = Enemy->GetForumlas();
 
 
-    //Enemy->SetX(Enemy->GetX()+1.0f);
-   // Enemy->SetX(Enemy->GetX()+1.0f);
-    updateGL();
+for(uint i = 0 ; i < Form.size(); i++)
+{
+    int x = 0;
+    int y = 0 ;
+//while((int(Enemy->GetX())!=tmp[i+1].x() && int(Enemy->GetY())!=tmp[i+1].y()) ||  x!=10)
+    while(x!=500)
+{
+
+    x++;
+    Enemy->SetY(int((Form[i][0]*qreal(x*x))+(Form[i][1]*qreal(x))+Form[i][2]));
+    Enemy->SetX(x);
+
+
+
+
+ updateGL();
+
+
+}
+
+
+
+}
+
 
 
 }
@@ -109,7 +115,6 @@ while(ColorMap[x][y]!=Qt::white)
  QColor tmp(255,255,255);
 //x = x-(x%64);
 //y = (y-(y%80))+80;
-qDebug() << x <<"  " <<y << "  ";
 
 for(int i = x ; i < x+64 ; i++)
 {
@@ -191,6 +196,7 @@ void myOpenglBoard::initializeGL()
     Background->initPixBoard(ColorMap);
 
     Enemy = new plain_enemy(&m_program,vertexAttr,textureAttr,textureUniform);
+    Enemy->SetPointList(Background->PointList);
     Enemy->SetX(0.0f);
     Enemy->SetY(768.0f);
 
@@ -259,22 +265,6 @@ void myOpenglBoard::resizeGL(int w, int h){
 void myOpenglBoard::initTruthTable()
 {
 
-/*TruthTable = new bool*[1024];
-for (int i = 0; i <1024 ; i++ )
-{
-    TruthTable[i] = new bool[768];
-
-}
-
-for (int i = 0 ; i <1024 ; i++)
-{
-   for (int j = 0 ; j <768 ; j++)
-    {
-
-       TruthTable[i][j] = false;
-
-   }
-}*/
 
     ColorMap = new QColor*[1024];
     for (int i = 0; i <1024 ; i++ )
@@ -295,6 +285,13 @@ for (int i = 0 ; i <1024 ; i++)
        }
     }
 
+
+
+
+}
+
+qreal myOpenglBoard::CalulateX()
+{
 
 
 

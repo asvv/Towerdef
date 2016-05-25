@@ -37,9 +37,7 @@ b = b.convertToFormat(QImage::Format_RGB888);
 
 
 m_texture = new QOpenGLTexture( b.mirrored() );
-qDebug()<<m_texture->height()<<" "<<m_texture->width() ;
-QByteArray arr((char*)b.bits(),b.byteCount());
-qDebug()<<b.byteCount();
+
 
 
 
@@ -183,6 +181,14 @@ void background::initPixBoard(QColor **_Board)
 
            QColor clrCurrent( PixMap.pixel(i,j) );
            _Board[i][j] = clrCurrent;
+           if(clrCurrent == Qt::green)
+           {
+               QPoint* tmp = new QPoint(i,j);
+               PointList.push_back(*tmp);
+               delete tmp;
+
+           }
+
 
 
 

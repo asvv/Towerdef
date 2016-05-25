@@ -18,6 +18,9 @@ public:
     GLfloat GetX();
     GLfloat GetY();
     GLfloat GetSize();
+    std::vector<std::vector<qreal>>& GetForumlas();
+    void SetPointList(const std::vector<QPoint>&);
+
 private:
     QOpenGLTexture* m_texture;
     GLfloat m_X;
@@ -29,6 +32,15 @@ private:
     int TextureUniform;
     std::vector<float> vertices;
     std::vector<float> texture_coords;
+    std::vector<QPoint> PointList;
+    std::vector<std::vector<qreal>> Formulas;
+
+
+
+    void CalcFormulas();
+
+
+
 };
 
 #endif // PLAIN_ENEMY_H

@@ -46,7 +46,7 @@ private:
     int textureAttr;
     int textureUniform;
     int matrixUniform;
-
+    qreal CalulateX();
 };
 
 #endif // MYOPENGLBOARD_H

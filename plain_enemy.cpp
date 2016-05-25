@@ -173,4 +173,89 @@ GLfloat plain_enemy::GetSize()
 
 }
 
+std::vector<std::vector<qreal> > &plain_enemy::GetForumlas()
+{
+    return Formulas;
+
+}
+
+void plain_enemy::CalcFormulas()
+{
+    Formulas.resize(PointList.size()-2);
+
+
+
+
+
+    for(uint i = 0 ; i<PointList.size()-2;i++)
+    {
+        QTransform Matrix(  qreal(PointList[i].x()*PointList[i].x()), qreal(PointList[i].x()), qreal(1),
+                            qreal(PointList[i+1].x()*PointList[i+1].x()), qreal(PointList[i+1].x()), qreal(1),
+                            qreal(PointList[i+2].x()*PointList[i+2].x()), qreal(PointList[i+2].x()), qreal(1));
+       qreal* V = new qreal[3]
+        {
+        qreal(PointList[i].y()),
+        qreal(PointList[i+1].y()),
+        qreal(PointList[i+2].y())
+
+        };
+
+
+    Matrix = Matrix.inverted();
+
+
+
+      qreal* M = new qreal[9]
+        {
+        Matrix.m11(),Matrix.m12(),Matrix.m13(),
+        Matrix.m21(),Matrix.m22(),Matrix.m23(),
+        Matrix.m31(),Matrix.m32(),Matrix.m33()
+
+
+        };
+
+      QGenericMatrix<3,3,qreal> GenMatrix(M);
+
+      QGenericMatrix<1,3,qreal> Vector(V);
+
+
+
+      QGenericMatrix<1,3,qreal> tmp(GenMatrix*Vector);
+      qreal* Result;
+      Result = tmp.data();
+
+
+qDebug()<<Vector;
+
+
+
+      for(int j  = 0; j < 3 ; j++)
+      {
+        Formulas[i].resize(3);
+        Formulas[i][j] = Result[j];
+
+
+
+
+      }
+
+
+
+
+    }
+
+
+
+
+}
+
+void plain_enemy::SetPointList(const std::vector<QPoint> & v)
+{
+    PointList = v;
+   CalcFormulas();
+
+
+}
+
+
 

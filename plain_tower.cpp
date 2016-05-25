@@ -31,6 +31,7 @@ plain_Tower::plain_Tower(const plain_Tower &other)
     //tmp = QGLWidget::convertToGLFormat(trans);
     m_texture = new QOpenGLTexture(trans);
 
+
     glEnd();
 }
 

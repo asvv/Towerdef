@@ -20,6 +20,7 @@ public:
     GLfloat GetSize();
     QImage& GetImage();
     void initPixBoard(QColor **_Board);
+    std::vector<QPoint> PointList;
 
 private:
     QImage b;
