@@ -19,9 +19,18 @@ public:
     GLfloat GetY();
     GLfloat GetSize();
     std::vector<std::vector<qreal>>& GetForumlas();
+    std::vector<qreal> Road;
     void SetPointList(const std::vector<QPoint>&);
+    void Move();
 
+
+
+    bool CheckIndex();
+    int Index;
 private:
+
+    QTimer Timer;
+
     QOpenGLTexture* m_texture;
     GLfloat m_X;
     GLfloat m_Y;
@@ -33,11 +42,13 @@ private:
     std::vector<float> vertices;
     std::vector<float> texture_coords;
     std::vector<QPoint> PointList;
+
     std::vector<std::vector<qreal>> Formulas;
 
 
 
     void CalcFormulas();
+    void CalcRoad();
 
 
 

@@ -4,11 +4,12 @@
 myOpenglBoard::myOpenglBoard(QWidget *parent)
     : QGLWidget(parent),
       TowerSlot(63,72,204),
-      Road(0,0,0)
+      Road(0,0,0),
+      Counter(0)
 {
     this->setFixedSize(1024,768);
-      connect(&Timer,SIGNAL(timeout()),this,SLOT(SlotMove()));
-    Timer.start(100);
+   connect(&Timer,SIGNAL(timeout()),this,SLOT(SlotMove()));
+    Timer.start(1);
 
 
 }
@@ -62,37 +63,40 @@ void myOpenglBoard::mousePressEvent(QMouseEvent *event)
 
 void myOpenglBoard::SlotMove()
 {
- std::vector<QPoint> tmp = Background->PointList;
- auto Form = Enemy->GetForumlas();
+    Enemy->SetX(GLfloat(Enemy->Index));
+    Enemy->SetY(GLfloat(Enemy->Road[Enemy->Index]));
+    if(Enemy->CheckIndex())
+    {
+    Enemy->Index++;
+    }
+    else
+    {
+        Enemy->Index = 0;
+    }
+    updateGL();
+    /*
+int x = 0;
 
-
-for(uint i = 0 ; i < Form.size(); i++)
+for (int i = 0 ; i < Background->PointList.size() ; i++)
 {
-    int x = 0;
-    int y = 0 ;
-//while((int(Enemy->GetX())!=tmp[i+1].x() && int(Enemy->GetY())!=tmp[i+1].y()) ||  x!=10)
-    while(x!=500)
+while(x!=500)
 {
-
-    x++;
-    Enemy->SetY(int((Form[i][0]*qreal(x*x))+(Form[i][1]*qreal(x))+Form[i][2]));
     Enemy->SetX(x);
+    Enemy->SetY(int((Enemy->GetForumlas()[i][0]*qreal(x*x))+(Enemy->GetForumlas()[i][1]*qreal(x))+Enemy->GetForumlas()[i][2]));
 
 
 
+}
+ }*/
 
- updateGL();
+
 
 
 }
 
 
 
-}
 
-
-
-}
 
 
 
@@ -199,6 +203,8 @@ void myOpenglBoard::initializeGL()
     Enemy->SetPointList(Background->PointList);
     Enemy->SetX(0.0f);
     Enemy->SetY(768.0f);
+   // qDebug()<<Enemy->Road.size();
+
 
 
 
@@ -232,6 +238,7 @@ m_program.setUniformValue(matrixUniform,mtrx);
 
 Background->draw();
 Enemy->draw();
+
 
 
 if(tower_vctr.size()>0)
@@ -295,6 +302,24 @@ qreal myOpenglBoard::CalulateX()
 
 
 
+}
+
+void myOpenglBoard::Move()
+{
+    int x = 0;
+
+    while(Counter != Background->PointList.size()-1 )
+    {
+
+        Enemy->SetY(int((Enemy->GetForumlas()[Counter][0]*qreal(x*x))+(Enemy->GetForumlas()[Counter][1]*qreal(x))+Enemy->GetForumlas()[Counter][2]));
+        Enemy->SetX(x);
+Sleep(100);
+updateGL();
+x++;
+Counter++;
+
+qDebug()<<Counter;
+}
 }
 
 

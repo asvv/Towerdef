@@ -1,5 +1,5 @@
 #include "plain_enemy.h"
-
+#include <QThread>
 #include "plain_enemy.h"
 
 plain_enemy::plain_enemy(const plain_enemy &other)
@@ -11,7 +11,9 @@ plain_enemy::plain_enemy(const plain_enemy &other)
       VertexAttr(other.VertexAttr),
       m_X(other.m_X),
       m_Y(other.m_Y),
-      m_Size(other.m_Size)
+      m_Size(other.m_Size),
+      Index(other.Index)
+
 {
 
     initVertices();
@@ -33,7 +35,8 @@ plain_enemy::plain_enemy(QOpenGLShaderProgram* p, int va, int ta, int tu)
     TextureUniform(tu),
     m_X(0.0f),
     m_Y(0.0f),
-    m_Size(20.0f)
+    m_Size(20.0f),
+    Index(0)
 {
 
 initVertices();
@@ -43,16 +46,6 @@ m_texture = new QOpenGLTexture( QImage( "C:/Users/Duras/Desktop/Tower Defence/Te
 }
 
 
-void plain_enemy::BuildTower()
-{
-
-
-
-
-
-
-
-}
 
 
 void plain_enemy::initVertices()
@@ -163,7 +156,7 @@ GLfloat plain_enemy::GetX()
 
 GLfloat plain_enemy::GetY()
 {
-    return m_Y;
+    return 768-m_Y;
 
 }
 
@@ -225,7 +218,7 @@ void plain_enemy::CalcFormulas()
       Result = tmp.data();
 
 
-qDebug()<<Vector;
+
 
 
 
@@ -246,6 +239,42 @@ qDebug()<<Vector;
 
 
 
+CalcRoad();
+
+
+}
+
+void plain_enemy::CalcRoad()
+{
+
+    qreal to_y=0.0;
+     int x = 0;
+    for(auto i = 0 ; i < PointList.size()-2 ; i++)
+    {
+
+        x = PointList[i].x();
+
+      //  qDebug()<<x;
+      //  qDebug()<<PointList.size();
+      //  qDebug()<<Formulas.size();
+        while(int(to_y)!=PointList[i+1].y())
+        {
+
+
+             to_y = (Formulas[i][0]*qreal(x*x))+(Formulas[i][1]*qreal(x))+Formulas[i][2];
+             Road.push_back(to_y);
+             x++;
+
+
+         }
+
+
+
+
+
+    }
+
+
 
 }
 
@@ -254,6 +283,49 @@ void plain_enemy::SetPointList(const std::vector<QPoint> & v)
     PointList = v;
    CalcFormulas();
 
+
+}
+
+void plain_enemy::Move()
+{
+
+
+
+/*for(auto i = 0 ; i < PointList.size()-1;i++ )
+{
+
+    uint x =0;
+   while(!(this->GetX() == PointList[i+1].x() && this->GetY() == PointList[i+1].y())){
+
+
+
+
+
+       x++;
+     this->SetY(int((Formulas[i][0]*qreal(x*x))+(Formulas[i][1]*qreal(x))+Formulas[i][2]));
+     this->SetX(x);
+
+       Sleep(50);
+
+
+
+
+    }
+
+}*/
+
+
+
+
+
+}
+
+bool plain_enemy::CheckIndex()
+{
+
+    if(this->Index==this->Road.size()-1)
+        return false;
+    return true;
 
 }
 
